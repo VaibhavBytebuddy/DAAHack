@@ -1,0 +1,17 @@
+ SpannableString styledText = new SpannableString("Hello " + name);
+
+            if (chkBold.isChecked())
+                styledText.setSpan(new StyleSpan(Typeface.BOLD), 0, styledText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+  if (chkUnderline.isChecked())
+                styledText.setSpan(new UnderlineSpan(), 0, styledText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+
+progressBar.setVisibility(View.VISIBLE);
+            progressBar.setProgress(0);
+            txtStatus.setText("Loading...");
+
+
+ android:textOn="Turn OFF"
+        android:textOff="Turn ON" />

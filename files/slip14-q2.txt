@@ -1,0 +1,72 @@
+// MainActivity.java
+// Paste this full file in MainActivity.java
+
+/*
+------------------- activity_main.xml -------------------
+Paste this in: res/layout/activity_main.xml
+---------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center">
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:layout_marginBottom="16dp" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LOGIN" />
+</LinearLayout>
+*/
+
+package com.example.loginapp;
+
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText username, password;
+    Button loginBtn;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+        loginBtn = findViewById(R.id.loginBtn);
+
+        loginBtn.setOnClickListener(v -> {
+            String user = username.getText().toString();
+            String pass = password.getText().toString();
+
+            if (user.equals(pass)) {
+                Toast.makeText(MainActivity.this, "Login Successful...", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(MainActivity.this, "Invalid Login", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}

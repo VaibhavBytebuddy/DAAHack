@@ -1,0 +1,103 @@
+// MainActivity.java
+// Paste this entire content into your MainActivity.java file
+
+/*
+------------------- activity_main.xml -------------------
+Paste this into: res/layout/activity_main.xml
+---------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <EditText
+        android:id="@+id/getnum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter a number"
+        android:inputType="number"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/btnCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check" />
+
+    <TextView
+        android:id="@+id/resultLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"/>
+</LinearLayout>
+*/
+
+/*
+--------- AndroidManifest.xml (inside <application>) ---------
+<activity android:name=".MainActivity">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>
+---------------------------------------------------------------
+*/
+
+package com.example.palindromechecker;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText getnum;
+    Button btnCheck;
+    TextView resultLabel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        getnum = findViewById(R.id.getnum);
+        btnCheck = findViewById(R.id.btnCheck);
+        resultLabel = findViewById(R.id.resultLabel);
+
+        btnCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String input = getnum.getText().toString();
+
+                if (input.isEmpty()) {
+                    resultLabel.setText("Please enter a number.");
+                    return;
+                }
+
+                int num = Integer.parseInt(input);
+                int original = num;
+                int reversed = 0;
+
+                while (num != 0) {
+                    int digit = num % 10;
+                    reversed = reversed * 10 + digit;
+                    num /= 10;
+                }
+
+                if (original == reversed) {
+                    resultLabel.setText(original + " is a Palindrome");
+                } else {
+                    resultLabel.setText(original + " is NOT a Palindrome");
+                }
+            }
+        });
+    }
+}

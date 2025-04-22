@@ -1,0 +1,112 @@
+// MainActivity.java
+
+/*
+------------------------ activity_main.xml ------------------------
+Paste this into: res/layout/activity_main.xml
+------------------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Email" />
+
+    <EditText
+        android:id="@+id/subject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Subject" />
+
+    <EditText
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Message" />
+
+    <Button
+        android:id="@+id/attachBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Attach File"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/sendBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send Email"
+        android:layout_marginTop="16dp" />
+</LinearLayout>
+*/
+
+package com.example.sendemailattachment;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.widget.*;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText email, subject, message;
+    Button attachBtn, sendBtn;
+    Uri fileUri;
+
+    ActivityResultLauncher<String[]> filePickerLauncher;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
+        email = findViewById(R.id.email);
+        subject = findViewById(R.id.subject);
+        message = findViewById(R.id.message);
+        attachBtn = findViewById(R.id.attachBtn);
+        sendBtn = findViewById(R.id.sendBtn);
+
+        filePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.OpenDocument(),
+                uri -> {
+                    if (uri != null) {
+                        fileUri = uri;
+                        Toast.makeText(this, "File Attached: " + uri.getLastPathSegment(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        attachBtn.setOnClickListener(v -> {
+            filePickerLauncher.launch(new String[]{"*/*"});
+        });
+
+        sendBtn.setOnClickListener(v -> {
+            String recipient = email.getText().toString();
+            String sub = subject.getText().toString();
+            String msg = message.getText().toString();
+
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            emailIntent.setType("*/*");
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipient});
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, sub);
+            emailIntent.putExtra(Intent.EXTRA_TEXT, msg);
+
+            if (fileUri != null) {
+                emailIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+            }
+
+            try {
+                startActivity(Intent.createChooser(emailIntent, "Choose Email App..."));
+            } catch (Exception e) {
+                Toast.makeText(this, "No Email App Found", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}

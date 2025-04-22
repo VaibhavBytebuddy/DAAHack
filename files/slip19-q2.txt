@@ -1,0 +1,105 @@
+// MainActivity.java
+
+/*
+---------------------- activity_main.xml ----------------------
+Paste this in: res/layout/activity_main.xml
+--------------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <EditText
+        android:id="@+id/numberInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter a number"
+        android:inputType="number"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/resultView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Result will be shown here"
+        android:textSize="18sp"/>
+</LinearLayout>
+*/
+
+/*
+---------------------- menu_main.xml ----------------------
+Paste this in: res/menu/menu_main.xml
+-----------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/find_factorial"
+        android:title="Find Factorial" />
+    <item
+        android:id="@+id/find_sum"
+        android:title="Find Sum of Digits" />
+</menu>
+*/
+
+package com.example.factorialsum;
+
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText numberInput;
+    TextView resultView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        numberInput = findViewById(R.id.numberInput);
+        resultView = findViewById(R.id.resultView);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);  // menu_main.xml
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String numText = numberInput.getText().toString();
+
+        if (numText.isEmpty()) {
+            Toast.makeText(this, "Please enter a number", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        int num = Integer.parseInt(numText);
+
+        if (item.getItemId() == R.id.find_factorial) {
+            long fact = 1;
+            for (int i = 1; i <= num; i++) {
+                fact *= i;
+            }
+            resultView.setText("Factorial: " + fact);
+        } else if (item.getItemId() == R.id.find_sum) {
+            int sum = 0;
+            int temp = num;
+            while (temp != 0) {
+                sum += temp % 10;
+                temp /= 10;
+            }
+            resultView.setText("Sum of Digits: " + sum);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+}

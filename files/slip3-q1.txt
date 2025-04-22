@@ -1,0 +1,110 @@
+// ArmstrongNumberApp.java
+// Full Armstrong Number Checker (Java + XML in one file)
+
+/*
+-------------------- activity_main.xml --------------------
+Place this in: res/layout/activity_main.xml
+----------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="20dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/etNumber"
+        android:hint="Enter a number"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnCheck"
+        android:text="Check Armstrong"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvResult"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:layout_marginTop="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+*/
+
+/*
+-------------------- AndroidManifest.xml --------------------
+Add this inside <application> tag
+-------------------------------------------------------------
+<activity android:name=".MainActivity">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>
+*/
+
+/*
+-------------------- MainActivity.java --------------------
+Create this in: java/com/example/armstrongchecker/MainActivity.java
+-----------------------------------------------------------
+*/
+
+package com.example.armstrongchecker;
+
+import android.os.Bundle;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText etNumber;
+    Button btnCheck;
+    TextView tvResult;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etNumber = findViewById(R.id.etNumber);
+        btnCheck = findViewById(R.id.btnCheck);
+        tvResult = findViewById(R.id.tvResult);
+
+        btnCheck.setOnClickListener(v -> {
+            String input = etNumber.getText().toString().trim();
+
+            if (input.isEmpty()) {
+                tvResult.setText("Please enter a number.");
+                return;
+            }
+
+            int number = Integer.parseInt(input);
+            if (isArmstrong(number)) {
+                tvResult.setText(number + " is an Armstrong Number");
+            } else {
+                tvResult.setText(number + " is NOT an Armstrong Number");
+            }
+        });
+    }
+
+    // Armstrong check logic
+    boolean isArmstrong(int num) {
+        int original = num;
+        int result = 0;
+        int digits = String.valueOf(num).length();
+
+        while (num != 0) {
+            int digit = num % 10;
+            result += Math.pow(digit, digits);
+            num /= 10;
+        }
+
+        return result == original;
+    }
+}

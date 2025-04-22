@@ -1,0 +1,156 @@
+// SpinnerApp.java
+// Complete Android App using Spinner and Buttons
+
+/*
+-------------------- activity_main.xml --------------------
+Paste this in: res/layout/activity_main.xml
+----------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/etItem"
+        android:hint="Enter Item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnAdd"
+            android:text="Add to spinner"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnRemove"
+            android:text="Remove from spinner"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:text="See Response Below"
+        android:layout_marginTop="16dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvSelectedItem"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+*/
+
+/*
+-------------------- AndroidManifest.xml --------------------
+Inside <application> tag
+-------------------------------------------------------------
+<activity android:name=".MainActivity">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>
+*/
+
+/*
+-------------------- MainActivity.java --------------------
+Paste this in: java/com/example/spinnerapp/MainActivity.java
+-----------------------------------------------------------
+*/
+
+package com.example.spinnerapp;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText etItem;
+    Button btnAdd, btnRemove;
+    Spinner spinner;
+    TextView tvSelectedItem;
+    ArrayList<String> itemList;
+    ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etItem = findViewById(R.id.etItem);
+        btnAdd = findViewById(R.id.btnAdd);
+        btnRemove = findViewById(R.id.btnRemove);
+        spinner = findViewById(R.id.spinner);
+        tvSelectedItem = findViewById(R.id.tvSelectedItem);
+
+        itemList = new ArrayList<>();
+        itemList.add("Apple"); // Default item
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, itemList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        btnAdd.setOnClickListener(v -> {
+            String newItem = etItem.getText().toString().trim();
+            if (!newItem.isEmpty()) {
+                itemList.add(newItem);
+                adapter.notifyDataSetChanged();
+                etItem.setText("");
+                Toast.makeText(this, "Added: " + newItem, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Enter an item first!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnRemove.setOnClickListener(v -> {
+            String itemToRemove = etItem.getText().toString().trim();
+            if (itemList.contains(itemToRemove)) {
+                itemList.remove(itemToRemove);
+                adapter.notifyDataSetChanged();
+                Toast.makeText(this, "Removed: " + itemToRemove, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Item not found!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                tvSelectedItem.setText("Selected: " + itemList.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                tvSelectedItem.setText("");
+            }
+        });
+    }
+}

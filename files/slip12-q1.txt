@@ -1,0 +1,59 @@
+// MainActivity.java
+// Paste this full code in MainActivity.java
+
+/*
+-------------------- activity_main.xml --------------------
+Paste this in: res/layout/activity_main.xml
+-----------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <ImageView
+        android:id="@+id/imgBulb"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/bulb_off"
+        android:layout_marginBottom="20dp" />
+
+    <ToggleButton
+        android:id="@+id/toggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="Turn OFF"
+        android:textOff="Turn ON" />
+</LinearLayout>
+*/
+
+package com.example.bulbtoggle;
+
+import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.ToggleButton;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    ToggleButton toggleButton;
+    ImageView imgBulb;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        toggleButton = findViewById(R.id.toggleButton);
+        imgBulb = findViewById(R.id.imgBulb);
+
+        toggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                imgBulb.setImageResource(R.drawable.bulb_on);   // light ON image
+            } else {
+                imgBulb.setImageResource(R.drawable.bulb_off);  // light OFF image
+            }
+        });
+    }
+}

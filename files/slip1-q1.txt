@@ -1,0 +1,96 @@
+// SplashScreenApp.java
+// This is a complete Android app to create a splash screen with layout and Java code.
+
+// 1. res/layout/activity_splash.xml
+/*
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#009688"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_centerInParent="true" />
+
+    <TextView
+        android:layout_below="@id/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Welcome to My App"
+        android:textSize="24sp"
+        android:textColor="#ffffff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
+*/
+
+// 2. java/com/example/splashscreen/SplashActivity.java
+package com.example.splashscreen;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+
+public class SplashActivity extends Activity {
+
+    private static final int SPLASH_TIME_OUT = 3000; // 3 seconds
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }, SPLASH_TIME_OUT);
+    }
+}
+
+// 3. java/com/example/splashscreen/MainActivity.java
+package com.example.splashscreen;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.widget.TextView;
+
+public class MainActivity extends Activity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        TextView text = new TextView(this);
+        text.setText("This is the Main Activity");
+        text.setTextSize(20);
+        setContentView(text);
+    }
+}
+
+// 4. AndroidManifest.xml (Don't forget to set SplashActivity as the launcher!)
+/*
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.splashscreen">
+
+    <application
+        android:allowBackup="true"
+        android:label="SplashScreenApp"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+
+        <activity android:name=".SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".MainActivity" />
+    </application>
+</manifest>
+*/

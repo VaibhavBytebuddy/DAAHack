@@ -1,0 +1,60 @@
+// MainActivity.java
+
+/*
+-------------------- activity_main.xml ---------------------
+Paste this in: res/layout/activity_main.xml
+-----------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/image1"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/changeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Image" />
+</LinearLayout>
+*/
+
+package com.example.changeimage;
+
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.ImageView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    ImageView imageView;
+    Button changeBtn;
+    boolean isImageOne = true;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
+        imageView = findViewById(R.id.imageView);
+        changeBtn = findViewById(R.id.changeBtn);
+
+        changeBtn.setOnClickListener(v -> {
+            if (isImageOne) {
+                imageView.setImageResource(R.drawable.image2);
+            } else {
+                imageView.setImageResource(R.drawable.image1);
+            }
+            isImageOne = !isImageOne;
+        });
+    }
+}

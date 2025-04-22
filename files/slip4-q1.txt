@@ -1,0 +1,100 @@
+// MainActivity.java
+// One file with all code + XML as comment on top
+
+/*
+-------------------- activity_main.xml --------------------
+Paste this inside res/layout/activity_main.xml
+----------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:text="Activity Lifecycle Demo"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+*/
+
+/*
+-------------------- AndroidManifest.xml --------------------
+Inside <application> tag
+-------------------------------------------------------------
+<activity android:name=".MainActivity">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>
+*/
+
+package com.example.lifecycleapp;
+
+import android.os.Bundle;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.util.Log;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    TextView tvStatus;
+    String TAG = "LifeCycle";
+
+    private void showMsg(String method) {
+        Toast.makeText(this, method, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, method);
+        tvStatus.setText("Current State: " + method);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        tvStatus = findViewById(R.id.tvStatus);
+        showMsg("onCreate()");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        showMsg("onStart()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showMsg("onResume()");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        showMsg("onPause()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        showMsg("onStop()");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        showMsg("onRestart()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        showMsg("onDestroy()");
+    }
+}

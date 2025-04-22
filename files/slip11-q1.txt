@@ -1,0 +1,144 @@
+// MainActivity.java
+// Paste everything from here in MainActivity.java
+
+/*
+------------------- activity_main.xml -------------------
+Paste this into: res/layout/activity_main.xml
+---------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/num1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter first number"
+        android:inputType="number"
+        android:layout_marginBottom="10dp" />
+
+    <EditText
+        android:id="@+id/num2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter second number"
+        android:inputType="number"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:id="@+id/btnPower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Power"
+        android:layout_marginBottom="10dp" />
+
+    <Button
+        android:id="@+id/btnAverage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Average" />
+</LinearLayout>
+*/
+
+package com.example.poweraverage;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText num1, num2;
+    Button btnPower, btnAverage;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        num1 = findViewById(R.id.num1);
+        num2 = findViewById(R.id.num2);
+        btnPower = findViewById(R.id.btnPower);
+        btnAverage = findViewById(R.id.btnAverage);
+
+        btnPower.setOnClickListener(view -> passData("power"));
+        btnAverage.setOnClickListener(view -> passData("average"));
+    }
+
+    void passData(String operation) {
+        int number1 = Integer.parseInt(num1.getText().toString());
+        int number2 = Integer.parseInt(num2.getText().toString());
+
+        Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+        intent.putExtra("num1", number1);
+        intent.putExtra("num2", number2);
+        intent.putExtra("operation", operation);
+        startActivity(intent);
+    }
+}
+
+
+
+
+// ResultActivity.java
+// Create a new Java class: ResultActivity.java
+
+/*
+------------------- activity_result.xml -------------------
+Paste this into: res/layout/activity_result.xml
+-----------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/txtResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Result will be shown here"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+</LinearLayout>
+*/
+
+package com.example.poweraverage;
+
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class ResultActivity extends AppCompatActivity {
+
+    TextView txtResult;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_result);
+
+        txtResult = findViewById(R.id.txtResult);
+
+        int num1 = getIntent().getIntExtra("num1", 0);
+        int num2 = getIntent().getIntExtra("num2", 0);
+        String operation = getIntent().getStringExtra("operation");
+
+        String resultText;
+        if ("power".equals(operation)) {
+            resultText = num1 + " raised to power " + num2 + " is " + (int)Math.pow(num1, num2);
+        } else {
+            resultText = "Average of " + num1 + " and " + num2 + " is " + ((num1 + num2) / 2.0);
+        }
+
+        txtResult.setText(resultText);
+    }
+}

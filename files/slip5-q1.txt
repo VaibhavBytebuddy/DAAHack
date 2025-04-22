@@ -1,0 +1,79 @@
+// MainActivity.java
+// Single file - includes activity_main.xml code in comments
+
+/*
+----------------- activity_main.xml -----------------
+Paste inside res/layout/activity_main.xml
+-----------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <Button
+        android:id="@+id/btnShowDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Alert Dialog" />
+</LinearLayout>
+*/
+
+/*
+------------- AndroidManifest.xml -------------------
+Inside <application> tag
+-----------------------------------------------------
+<activity android:name=".MainActivity">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>
+*/
+
+package com.example.alertdialogdemo;
+
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    Button btnShowDialog;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        btnShowDialog = findViewById(R.id.btnShowDialog);
+
+        btnShowDialog.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Confirm Action");
+            builder.setMessage("Do you want to continue?");
+            builder.setCancelable(false);
+
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                Toast.makeText(getApplicationContext(), "You clicked YES", Toast.LENGTH_SHORT).show();
+            });
+
+            builder.setNegativeButton("No", (dialog, which) -> {
+                Toast.makeText(getApplicationContext(), "You clicked NO", Toast.LENGTH_SHORT).show();
+                dialog.cancel();
+            });
+
+            builder.setNeutralButton("Cancel", (dialog, which) -> {
+                Toast.makeText(getApplicationContext(), "Dialog Cancelled", Toast.LENGTH_SHORT).show();
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
+    }
+}

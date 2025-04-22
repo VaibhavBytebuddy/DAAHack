@@ -1,0 +1,190 @@
+// MainActivity.java
+// Includes activity_main.xml inside comments at the top.
+
+/*
+--------------- activity_main.xml -------------------
+Paste this in res/layout/activity_main.xml
+-----------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/edtName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your name" />
+
+    <TextView
+        android:id="@+id/txtResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Result will appear here"
+        android:padding="10dp"
+        android:textSize="20sp" />
+
+    <CheckBox
+        android:id="@+id/chkBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bold" />
+
+    <CheckBox
+        android:id="@+id/chkItalic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Italic" />
+
+    <CheckBox
+        android:id="@+id/chkUnderline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Underline" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioRed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Red" />
+
+        <RadioButton
+            android:id="@+id/radioBlue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blue" />
+
+        <RadioButton
+            android:id="@+id/radioGreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Green" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Display" />
+
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Clear" />
+
+    <Button
+        android:id="@+id/btnExit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Exit" />
+</LinearLayout>
+</ScrollView>
+*/
+
+/*
+--------- AndroidManifest.xml (inside <application>) ---------
+<activity android:name=".MainActivity">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>
+---------------------------------------------------------------
+*/
+
+package com.example.nameformatter;
+
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
+import android.view.View;
+import android.widget.*;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText edtName;
+    TextView txtResult;
+    CheckBox chkBold, chkItalic, chkUnderline;
+    RadioButton radioRed, radioBlue, radioGreen;
+    Button btnDisplay, btnClear, btnExit;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        edtName = findViewById(R.id.edtName);
+        txtResult = findViewById(R.id.txtResult);
+        chkBold = findViewById(R.id.chkBold);
+        chkItalic = findViewById(R.id.chkItalic);
+        chkUnderline = findViewById(R.id.chkUnderline);
+        radioRed = findViewById(R.id.radioRed);
+        radioBlue = findViewById(R.id.radioBlue);
+        radioGreen = findViewById(R.id.radioGreen);
+        btnDisplay = findViewById(R.id.btnDisplay);
+        btnClear = findViewById(R.id.btnClear);
+        btnExit = findViewById(R.id.btnExit);
+
+        btnDisplay.setOnClickListener(v -> {
+            String name = edtName.getText().toString();
+            if (name.isEmpty()) {
+                Toast.makeText(this, "Please enter your name", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            SpannableString styledText = new SpannableString("Hello " + name);
+
+            if (chkBold.isChecked())
+                styledText.setSpan(new StyleSpan(Typeface.BOLD), 0, styledText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            if (chkItalic.isChecked())
+                styledText.setSpan(new StyleSpan(Typeface.ITALIC), 0, styledText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            if (chkUnderline.isChecked())
+                styledText.setSpan(new UnderlineSpan(), 0, styledText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            if (radioRed.isChecked()) {
+                txtResult.setTextColor(Color.RED);
+            } else if (radioBlue.isChecked()) {
+                txtResult.setTextColor(Color.BLUE);
+            } else if (radioGreen.isChecked()) {
+                txtResult.setTextColor(Color.GREEN);
+            } else {
+                txtResult.setTextColor(Color.BLACK);
+            }
+
+            txtResult.setText(styledText);
+        });
+
+        btnClear.setOnClickListener(v -> {
+            edtName.setText("");
+            txtResult.setText("Result will appear here");
+            chkBold.setChecked(false);
+            chkItalic.setChecked(false);
+            chkUnderline.setChecked(false);
+            ((RadioGroup)findViewById(R.id.radioGroupColor)).clearCheck();
+        });
+
+        btnExit.setOnClickListener(v -> finish());
+    }
+}

@@ -1,0 +1,93 @@
+// MainActivity.java
+
+/*
+---------------------- activity_main.xml ----------------------
+Paste this in: res/layout/activity_main.xml
+--------------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center">
+
+    <EditText
+        android:id="@+id/num1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter First Number"
+        android:inputType="number"
+        android:layout_marginBottom="10dp"/>
+
+    <EditText
+        android:id="@+id/num2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Second Number"
+        android:inputType="number"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/showBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Numbers" />
+
+    <TextView
+        android:id="@+id/result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"/>
+</LinearLayout>
+*/
+
+package com.example.accepttwonumbers;
+
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText num1, num2;
+    Button showBtn;
+    TextView result;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
+        num1 = findViewById(R.id.num1);
+        num2 = findViewById(R.id.num2);
+        showBtn = findViewById(R.id.showBtn);
+        result = findViewById(R.id.result);
+
+        showBtn.setOnClickListener(v -> {
+            String s1 = num1.getText().toString();
+            String s2 = num2.getText().toString();
+
+            if (s1.isEmpty() || s2.isEmpty()) {
+                Toast.makeText(this, "Please enter both numbers", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int n1 = Integer.parseInt(s1);
+            int n2 = Integer.parseInt(s2);
+
+            if (n1 > 20 && n2 > 20) {
+                Toast.makeText(this, "Both numbers > 20. Enter new numbers.", Toast.LENGTH_SHORT).show();
+                num1.setText("");
+                num2.setText("");
+                result.setText("");
+            } else {
+                result.setText("Number 1: " + n1 + "\nNumber 2: " + n2);
+            }
+        });
+    }
+}

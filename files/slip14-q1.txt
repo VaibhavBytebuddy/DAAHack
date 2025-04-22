@@ -1,0 +1,77 @@
+// MainActivity.java
+// Paste this entire file into your MainActivity.java
+
+/*
+---------------- activity_main.xml ----------------
+Paste this in: res/layout/activity_main.xml
+---------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <EditText
+        android:id="@+id/inputNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter a number"
+        android:inputType="number"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:id="@+id/btnCalculate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calculate Factorial"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/resultView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Result will be shown here"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+</LinearLayout>
+*/
+
+package com.example.factorialapp;
+
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText inputNumber;
+    Button btnCalculate;
+    TextView resultView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        inputNumber = findViewById(R.id.inputNumber);
+        btnCalculate = findViewById(R.id.btnCalculate);
+        resultView = findViewById(R.id.resultView);
+
+        btnCalculate.setOnClickListener(view -> {
+            String input = inputNumber.getText().toString();
+            if (!input.isEmpty()) {
+                int number = Integer.parseInt(input);
+                long factorial = 1;
+                for (int i = 1; i <= number; i++) {
+                    factorial *= i;
+                }
+                resultView.setText("Factorial of " + number + " is: " + factorial);
+            } else {
+                resultView.setText("Please enter a number");
+            }
+        });
+    }
+}

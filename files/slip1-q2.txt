@@ -1,0 +1,194 @@
+// StudentApp.java
+// This file contains everything you need for a Student SQLite Android app.
+// Operations: Insert 5 students from user input and show all students.
+
+/*
+-------------------- activity_main.xml --------------------
+Place this in: res/layout/activity_main.xml
+----------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/etRoll"
+            android:hint="Roll No"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/etName"
+            android:hint="Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/etAddress"
+            android:hint="Address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/etPercentage"
+            android:hint="Percentage"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnInsert"
+            android:text="Insert Student"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btnShow"
+            android:text="Show All Students"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tvResult"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>
+*/
+
+/*
+-------------------- AndroidManifest.xml --------------------
+Add inside <application> tag
+-------------------------------------------------------------
+<activity android:name=".MainActivity">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>
+*/
+
+/*
+-------------------- MainActivity.java --------------------
+Create this in: java/com/example/studentapp/MainActivity.java
+-----------------------------------------------------------
+*/
+
+package com.example.studentapp;
+
+import android.database.Cursor;
+import android.os.Bundle;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText etRoll, etName, etAddress, etPercentage;
+    Button btnInsert, btnShow;
+    TextView tvResult;
+
+    StudentDBHelper dbHelper;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
+        etRoll = findViewById(R.id.etRoll);
+        etName = findViewById(R.id.etName);
+        etAddress = findViewById(R.id.etAddress);
+        etPercentage = findViewById(R.id.etPercentage);
+        btnInsert = findViewById(R.id.btnInsert);
+        btnShow = findViewById(R.id.btnShow);
+        tvResult = findViewById(R.id.tvResult);
+
+        dbHelper = new StudentDBHelper(this);
+
+        btnInsert.setOnClickListener(v -> {
+            int roll = Integer.parseInt(etRoll.getText().toString());
+            String name = etName.getText().toString();
+            String address = etAddress.getText().toString();
+            float percentage = Float.parseFloat(etPercentage.getText().toString());
+
+            boolean inserted = dbHelper.insertStudent(roll, name, address, percentage);
+            if (inserted) {
+                Toast.makeText(this, "Student inserted", Toast.LENGTH_SHORT).show();
+                etRoll.setText(""); etName.setText(""); etAddress.setText(""); etPercentage.setText("");
+            } else {
+                Toast.makeText(this, "Error inserting student", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnShow.setOnClickListener(v -> {
+            Cursor cursor = dbHelper.getAllStudents();
+            StringBuilder result = new StringBuilder();
+            while (cursor.moveToNext()) {
+                result.append("Roll: ").append(cursor.getInt(0)).append("\n")
+                        .append("Name: ").append(cursor.getString(1)).append("\n")
+                        .append("Address: ").append(cursor.getString(2)).append("\n")
+                        .append("Percentage: ").append(cursor.getFloat(3)).append("%\n\n");
+            }
+            tvResult.setText(result.toString());
+        });
+    }
+}
+
+/*
+-------------------- StudentDBHelper.java --------------------
+Create this in: java/com/example/studentapp/StudentDBHelper.java
+--------------------------------------------------------------
+*/
+
+package com.example.studentapp;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.*;
+
+public class StudentDBHelper extends SQLiteOpenHelper {
+
+    private static final String DB_NAME = "student.db";
+    private static final int DB_VERSION = 1;
+
+    public StudentDBHelper(Context context) {
+        super(context, DB_NAME, null, DB_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE Student (roll_no INTEGER PRIMARY KEY, name TEXT, address TEXT, percentage REAL)");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS Student");
+        onCreate(db);
+    }
+
+    public boolean insertStudent(int roll, String name, String address, float percentage) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("roll_no", roll);
+        values.put("name", name);
+        values.put("address", address);
+        values.put("percentage", percentage);
+        long res = db.insert("Student", null, values);
+        return res != -1;
+    }
+
+    public Cursor getAllStudents() {
+        SQLiteDatabase db = getReadableDatabase();
+        return db.rawQuery("SELECT * FROM Student", null);
+    }
+}
